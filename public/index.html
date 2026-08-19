@@ -20,6 +20,7 @@ body {
     overflow-x: hidden;
 }
 
+/* Animated background pattern */
 body::before {
     content: '';
     position: fixed;
@@ -40,6 +41,7 @@ body::before {
     z-index: 1;
 }
 
+/* Header with Indian flag colors */
 .header {
     text-align: center;
     margin-bottom: 30px;
@@ -64,6 +66,7 @@ body::before {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 10px;
 }
 
@@ -74,6 +77,7 @@ body::before {
     letter-spacing: 2px;
 }
 
+/* Main card */
 .card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -81,7 +85,6 @@ body::before {
     padding: 40px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     animation: fadeInUp 0.8s ease;
-    margin-bottom: 20px;
 }
 
 @keyframes fadeInDown {
@@ -116,7 +119,7 @@ label {
     font-size: 14px;
 }
 
-select, input, textarea {
+select, input {
     width: 100%;
     padding: 15px 20px;
     border: 2px solid #e0e0e0;
@@ -126,10 +129,14 @@ select, input, textarea {
     background: #fff;
 }
 
-select:focus, input:focus, textarea:focus {
+select:focus, input:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+select {
+    cursor: pointer;
 }
 
 .btn {
@@ -152,6 +159,11 @@ select:focus, input:focus, textarea:focus {
     box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
 }
 
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Result card */
 .result {
     margin-top: 30px;
     padding: 25px;
@@ -175,6 +187,10 @@ select:focus, input:focus, textarea:focus {
     margin: 12px 0;
     font-size: 16px;
     color: #333;
+}
+
+.result-item strong {
+    color: #667eea;
 }
 
 .status-badge {
@@ -212,6 +228,7 @@ select:focus, input:focus, textarea:focus {
     border-left: 4px solid #667eea;
 }
 
+/* Helpline section */
 .helpline {
     margin-top: 30px;
     padding: 25px;
@@ -262,6 +279,7 @@ select:focus, input:focus, textarea:focus {
     font-weight: 700;
 }
 
+/* Footer */
 .footer {
     text-align: center;
     margin-top: 30px;
@@ -270,6 +288,7 @@ select:focus, input:focus, textarea:focus {
     opacity: 0.9;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
     .title {
         font-size: 36px;
@@ -341,11 +360,140 @@ select:focus, input:focus, textarea:focus {
             <input id="price" type="number" placeholder="e.g., 50" />
         </div>
 
-        <button class="btn" onclick="checkPrice()">
+        <button class="btn" onclick="startDeal()">
             🔍 Check Price
         </button>
 
         <div class="result" id="result"></div>
+    </div>
+
+    <!-- Live Price Updates Section -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>📈</span> Live Mandi Prices
+            <button onclick="refreshPrices()" style="margin-left: auto; padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                🔄 Refresh
+            </button>
+        </div>
+        <div style="font-size: 12px; color: #666; margin-bottom: 15px;" id="lastUpdated">
+            Last updated: Loading...
+        </div>
+        <div id="priceGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+            <div style="text-align: center; padding: 20px; color: #999;">Loading prices...</div>
+        </div>
+    </div>
+
+    <!-- Weather Widget -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>🌤️</span> Weather & Crop Insights
+            <button onclick="refreshWeather()" style="margin-left: auto; padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                🔄 Refresh
+            </button>
+        </div>
+        <div id="weatherWidget" style="padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Temperature</div>
+                    <div style="font-size: 24px; font-weight: 700;" id="temp">--°C</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Humidity</div>
+                    <div style="font-size: 24px; font-weight: 700;" id="humidity">--%</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Wind Speed</div>
+                    <div style="font-size: 24px; font-weight: 700;" id="wind">-- km/h</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Condition</div>
+                    <div style="font-size: 18px; font-weight: 600;" id="condition">--</div>
+                </div>
+            </div>
+            <div id="recommendations" style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.2); border-radius: 8px; font-size: 14px;">
+                Loading recommendations...
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Analytics -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>📊</span> Market Analytics
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 14px; opacity: 0.9;">Average Price</div>
+                <div style="font-size: 32px; font-weight: 700; margin: 10px 0;" id="avgPrice">₹--</div>
+                <div style="font-size: 12px; opacity: 0.8;">Across all items</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 14px; opacity: 0.9;">Lowest Price</div>
+                <div style="font-size: 24px; font-weight: 700; margin: 10px 0;" id="lowestItem">--</div>
+                <div style="font-size: 20px; font-weight: 600;" id="lowestPrice">₹--</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 14px; opacity: 0.9;">Highest Price</div>
+                <div style="font-size: 24px; font-weight: 700; margin: 10px 0;" id="highestItem">--</div>
+                <div style="font-size: 20px; font-weight: 600;" id="highestPrice">₹--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price Trends -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>📉</span> Price Trends
+        </div>
+        <div style="margin-top: 15px;">
+            <label style="display: block; margin-bottom: 10px; font-weight: 600;">Select Item for Trend:</label>
+            <select id="trendItem" onchange="showTrend()" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                <option value="">-- Choose Item --</option>
+                <option value="tomato">Tomato</option>
+                <option value="onion">Onion</option>
+                <option value="potato">Potato</option>
+                <option value="rice">Rice</option>
+                <option value="wheat">Wheat</option>
+            </select>
+        </div>
+        <div id="trendDisplay" style="margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 12px; display: none;">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;" id="trendTitle">--</div>
+            <div id="trendData" style="font-size: 14px; color: #666;"></div>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>💬</span> Share Your Feedback
+        </div>
+        <div class="input-group">
+            <label for="feedbackName">👤 Your Name</label>
+            <input id="feedbackName" type="text" placeholder="Enter your name" />
+        </div>
+        <div class="input-group">
+            <label for="feedbackEmail">📧 Email (Optional)</label>
+            <input id="feedbackEmail" type="email" placeholder="your@email.com" />
+        </div>
+        <div class="input-group">
+            <label for="feedbackRating">⭐ Rating</label>
+            <select id="feedbackRating">
+                <option value="">-- Select Rating --</option>
+                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                <option value="4">⭐⭐⭐⭐ Good</option>
+                <option value="3">⭐⭐⭐ Average</option>
+                <option value="2">⭐⭐ Poor</option>
+                <option value="1">⭐ Very Poor</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="feedbackMessage">💭 Your Feedback</label>
+            <textarea id="feedbackMessage" style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 15px; font-size: 16px; min-height: 100px; font-family: inherit; resize: vertical;" placeholder="Share your thoughts..."></textarea>
+        </div>
+        <button class="btn" onclick="submitFeedback()">
+            📤 Submit Feedback
+        </button>
+        <div class="result" id="feedbackResult"></div>
     </div>
 
     <div class="helpline">
@@ -379,32 +527,17 @@ select:focus, input:focus, textarea:focus {
 </div>
 
 <script>
-const MANDI_PRICES = {
-    "tomato": 40,
-    "onion": 25,
-    "potato": 18,
-    "rice": 50,
-    "wheat": 30,
-    "apple": 120,
-    "banana": 40,
-    "mango": 80,
-    "bhindi": 35,
-    "cabbage": 20,
-    "carrot": 30,
-    "cauliflower": 35,
-    "garlic": 60,
-    "ginger": 100,
-    "lemon": 150,
-    "milk": 60,
-    "paneer": 400,
-    "chicken": 180,
-    "egg": 6,
-    "dal": 100
-};
+// Auto-refresh prices every 30 seconds
+let priceRefreshInterval;
 
-function checkPrice() {
+// API Base URL - automatically detects environment
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://127.0.0.1:5001' 
+    : '/api';
+
+function startDeal() {
     const item = document.getElementById("item").value;
-    const price = parseInt(document.getElementById("price").value);
+    const price = document.getElementById("price").value;
     const resultDiv = document.getElementById("result");
 
     if(!item || !price) {
@@ -413,47 +546,209 @@ function checkPrice() {
         return;
     }
 
-    const mandiPrice = MANDI_PRICES[item];
-    const diff = price - mandiPrice;
-    
-    let status, message;
-    
-    if (diff > 10) {
-        status = "LOSS";
-        message = `Aap zyada de rahe ho! Mandi rate ₹${mandiPrice} hai.`;
-    } else if (diff < -10) {
-        status = "PROFIT";
-        message = `Badhai ho! Bahut sasta mila. Mandi rate ₹${mandiPrice} hai.`;
-    } else {
-        status = "FAIR";
-        message = "Theek bhaav hai, sauda ho sakta hai.";
-    }
+    fetch(`${API_BASE_URL}/deal`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            item: item,
+            seller_price: price
+        })
+    })
+    .then(r => r.json())
+    .then(d => {
+        if(d.error){
+            resultDiv.innerHTML = `<div class="message-box">❌ ${d.error}</div>`;
+            resultDiv.classList.add('show');
+            return;
+        }
 
-    resultDiv.innerHTML = `
-        <div class="result-item"><strong>🧾 Item:</strong> ${item}</div>
-        <div class="result-item"><strong>📊 Mandi Rate:</strong> ₹${mandiPrice}/kg</div>
-        <div class="result-item"><strong>💰 Seller Price:</strong> ₹${price}/kg</div>
-        <div class="result-item">
-            <strong>Status:</strong> 
-            <span class="status-badge status-${status}">${status}</span>
-        </div>
-        <div class="message-box">💬 ${message}</div>
-    `;
-    resultDiv.classList.add('show');
-    
-    // Voice announcement
-    const utterance = new SpeechSynthesisUtterance(message);
-    utterance.lang = 'hi-IN';
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    
-    const voices = speechSynthesis.getVoices();
-    const hindiVoice = voices.find(v => v.lang.includes('hi'));
-    if(hindiVoice) utterance.voice = hindiVoice;
-    
-    speechSynthesis.speak(utterance);
+        resultDiv.innerHTML = `
+            <div class="result-item"><strong>🧾 Item:</strong> ${d.item}</div>
+            <div class="result-item"><strong>📊 Mandi Rate:</strong> ₹${d.mandi_price}/kg</div>
+            <div class="result-item"><strong>💰 Seller Price:</strong> ₹${d.seller_price}/kg</div>
+            <div class="result-item">
+                <strong>Status:</strong> 
+                <span class="status-badge status-${d.status}">${d.status}</span>
+            </div>
+            <div class="message-box">💬 ${d.message}</div>
+        `;
+        resultDiv.classList.add('show');
+        
+        // Voice announcement
+        const utterance = new SpeechSynthesisUtterance(d.message);
+        utterance.lang = 'hi-IN';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        
+        const voices = speechSynthesis.getVoices();
+        const hindiVoice = voices.find(v => v.lang.includes('hi'));
+        if(hindiVoice) utterance.voice = hindiVoice;
+        
+        speechSynthesis.speak(utterance);
+    })
+    .catch(err => {
+        resultDiv.innerHTML = '<div class="message-box">❌ Backend connection failed</div>';
+        resultDiv.classList.add('show');
+    });
 }
 
+function refreshPrices() {
+    fetch(`${API_BASE_URL}/prices`)
+        .then(r => r.json())
+        .then(data => {
+            const priceGrid = document.getElementById("priceGrid");
+            const lastUpdated = document.getElementById("lastUpdated");
+            
+            lastUpdated.textContent = `Last updated: ${data.last_updated} | Total items: ${data.total_items}`;
+            
+            let html = '';
+            for(let [item, price] of Object.entries(data.prices)) {
+                html += `
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">${getEmoji(item)}</div>
+                        <div style="font-weight: 600; font-size: 14px; text-transform: capitalize;">${item}</div>
+                        <div style="font-size: 18px; font-weight: 700; margin-top: 5px;">₹${price}/kg</div>
+                    </div>
+                `;
+            }
+            priceGrid.innerHTML = html;
+        })
+        .catch(err => {
+            document.getElementById("priceGrid").innerHTML = '<div style="text-align: center; padding: 20px; color: #ef4444;">Failed to load prices</div>';
+        });
+}
+
+function getEmoji(item) {
+    const emojiMap = {
+        'tomato': '🍅', 'onion': '🧅', 'potato': '🥔', 'bhindi': '🌱',
+        'cabbage': '🥬', 'carrot': '🥕', 'cauliflower': '🥦',
+        'apple': '🍎', 'banana': '🍌', 'mango': '🥭', 'lemon': '🍋',
+        'rice': '🌾', 'wheat': '🌾', 'dal': '🫘',
+        'garlic': '🧄', 'ginger': '🫚',
+        'milk': '🥛', 'paneer': '🧈', 'chicken': '🍗', 'egg': '🥚'
+    };
+    return emojiMap[item] || '🛒';
+}
+
+// Load prices on page load
+window.addEventListener('load', () => {
+    refreshPrices();
+    refreshWeather();
+    refreshAnalytics();
+    // Auto-refresh every 30 seconds
+    priceRefreshInterval = setInterval(refreshPrices, 30000);
+    setInterval(refreshWeather, 60000); // Weather every minute
+    setInterval(refreshAnalytics, 30000); // Analytics every 30 sec
+});
+
+function refreshWeather() {
+    fetch(`${API_BASE_URL}/weather?city=Delhi`)
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('temp').textContent = data.weather.temperature + '°C';
+            document.getElementById('humidity').textContent = data.weather.humidity + '%';
+            document.getElementById('wind').textContent = data.weather.wind_speed + ' km/h';
+            document.getElementById('condition').textContent = data.weather.description;
+            
+            let recsHTML = '<strong>🌾 Crop Recommendations:</strong><br>';
+            data.recommendations.forEach(rec => {
+                recsHTML += '• ' + rec + '<br>';
+            });
+            document.getElementById('recommendations').innerHTML = recsHTML;
+        })
+        .catch(err => console.error('Weather error:', err));
+}
+
+function refreshAnalytics() {
+    fetch(`${API_BASE_URL}/analytics`)
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('avgPrice').textContent = '₹' + data.average_price;
+            document.getElementById('lowestItem').textContent = data.lowest.item;
+            document.getElementById('lowestPrice').textContent = '₹' + data.lowest.price;
+            document.getElementById('highestItem').textContent = data.highest.item;
+            document.getElementById('highestPrice').textContent = '₹' + data.highest.price;
+        })
+        .catch(err => console.error('Analytics error:', err));
+}
+
+function showTrend() {
+    const item = document.getElementById('trendItem').value;
+    if (!item) {
+        document.getElementById('trendDisplay').style.display = 'none';
+        return;
+    }
+    
+    fetch(`${API_BASE_URL}/history/${item}`)
+        .then(r => r.json())
+        .then(data => {
+            const display = document.getElementById('trendDisplay');
+            display.style.display = 'block';
+            document.getElementById('trendTitle').textContent = item.charAt(0).toUpperCase() + item.slice(1) + ' Price History';
+            
+            if (data.history.length === 0) {
+                document.getElementById('trendData').innerHTML = 'No historical data available yet. Check back after a few minutes.';
+            } else {
+                let html = '<div style="max-height: 200px; overflow-y: auto;">';
+                data.history.forEach(h => {
+                    html += `<div style="padding: 8px; margin: 5px 0; background: white; border-radius: 8px; display: flex; justify-content: space-between;">
+                        <span>${h.timestamp}</span>
+                        <span style="font-weight: 700; color: #667eea;">₹${h.price}/kg</span>
+                    </div>`;
+                });
+                html += '</div>';
+                document.getElementById('trendData').innerHTML = html;
+            }
+        })
+        .catch(err => console.error('Trend error:', err));
+}
+
+function submitFeedback() {
+    const name = document.getElementById("feedbackName").value;
+    const email = document.getElementById("feedbackEmail").value;
+    const rating = document.getElementById("feedbackRating").value;
+    const message = document.getElementById("feedbackMessage").value;
+    const resultDiv = document.getElementById("feedbackResult");
+
+    if(!name || !rating || !message) {
+        resultDiv.innerHTML = '<div class="message-box">⚠️ Please fill all required fields</div>';
+        resultDiv.classList.add('show');
+        return;
+    }
+
+    fetch(`${API_BASE_URL}/feedback`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            name: name,
+            email: email,
+            rating: rating,
+            message: message
+        })
+    })
+    .then(r => r.json())
+    .then(d => {
+        resultDiv.innerHTML = '<div class="message-box" style="background: #10b981; color: white;">✅ Thank you for your feedback!</div>';
+        resultDiv.classList.add('show');
+        
+        // Clear form
+        document.getElementById("feedbackName").value = '';
+        document.getElementById("feedbackEmail").value = '';
+        document.getElementById("feedbackRating").value = '';
+        document.getElementById("feedbackMessage").value = '';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            resultDiv.classList.remove('show');
+        }, 3000);
+    })
+    .catch(err => {
+        resultDiv.innerHTML = '<div class="message-box">❌ Failed to submit feedback</div>';
+        resultDiv.classList.add('show');
+    });
+}
+
+// Load voices
 speechSynthesis.getVoices();
 </script>
 
