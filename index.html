@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧺 MOL-BHAAV | AI Mandi Saathi</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Animated background pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header with Indian flag colors */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: fadeInDown 0.8s ease;
+}
+
+.logo {
+    font-size: 80px;
+    margin-bottom: 10px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.title {
+    font-size: 48px;
+    font-weight: 900;
+    background: linear-gradient(45deg, #FF9933, #FFFFFF, #138808);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+/* Main card */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+select, input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+select {
+    cursor: pointer;
+}
+
+.btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Result card */
+.result {
+    margin-top: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 20px;
+    border-left: 5px solid #667eea;
+    display: none;
+    animation: slideIn 0.5s ease;
+}
+
+.result.show {
+    display: block;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.result-item {
+    margin: 12px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.result-item strong {
+    color: #667eea;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.status-PROFIT {
+    background: #10b981;
+    color: white;
+}
+
+.status-LOSS {
+    background: #ef4444;
+    color: white;
+}
+
+.status-FAIR {
+    background: #f59e0b;
+    color: white;
+}
+
+.message-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 15px;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+    border-left: 4px solid #667eea;
+}
+
+/* Helpline section */
+.helpline {
+    margin-top: 30px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    border: 2px dashed #667eea;
+}
+
+.helpline-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.helpline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.helpline-item {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.helpline-item:hover {
+    transform: translateY(-3px);
+}
+
+.helpline-item strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.helpline-item a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    color: white;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .title {
+        font-size: 36px;
+    }
+    
+    .card {
+        padding: 25px;
+    }
+    
+    .helpline-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">🧺</div>
+        <h1 class="title">MOL-BHAAV</h1>
+        <p class="subtitle">AI-Powered Mandi Saathi | किसान का डिजिटल साथी</p>
+    </div>
+
+    <div class="card">
+        <div class="section-title">
+            <span>📊</span> Check Mandi Rates
+        </div>
+
+        <div class="input-group">
+            <label for="item">🛒 Select Item</label>
+            <select id="item">
+                <option value="">-- Choose an Item --</option>
+                <optgroup label="🥬 Vegetables">
+                    <option value="tomato">Tomato (टमाटर)</option>
+                    <option value="onion">Onion (प्याज)</option>
+                    <option value="potato">Potato (आलू)</option>
+                    <option value="bhindi">Bhindi (भिंडी)</option>
+                    <option value="cabbage">Cabbage (पत्तागोभी)</option>
+                    <option value="carrot">Carrot (गाजर)</option>
+                    <option value="cauliflower">Cauliflower (फूलगोभी)</option>
+                </optgroup>
+                <optgroup label="🍎 Fruits">
+                    <option value="apple">Apple (सेब)</option>
+                    <option value="banana">Banana (केला)</option>
+                    <option value="mango">Mango (आम)</option>
+                    <option value="lemon">Lemon (नींबू)</option>
+                </optgroup>
+                <optgroup label="🌾 Grains">
+                    <option value="rice">Rice (चावल)</option>
+                    <option value="wheat">Wheat (गेहूं)</option>
+                    <option value="dal">Dal (दाल)</option>
+                </optgroup>
+                <optgroup label="🧄 Spices">
+                    <option value="garlic">Garlic (लहसुन)</option>
+                    <option value="ginger">Ginger (अदरक)</option>
+                </optgroup>
+                <optgroup label="🥛 Dairy & Protein">
+                    <option value="milk">Milk (दूध)</option>
+                    <option value="paneer">Paneer (पनीर)</option>
+                    <option value="chicken">Chicken (चिकन)</option>
+                    <option value="egg">Egg (अंडा)</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="price">💰 Seller's Price (₹/kg)</label>
+            <input id="price" type="number" placeholder="e.g., 50" />
+        </div>
+
+        <button class="btn" onclick="startDeal()">
+            🔍 Check Price
+        </button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <!-- Live Price Updates Section -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>📈</span> Live Mandi Prices
+            <button onclick="refreshPrices()" style="margin-left: auto; padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                🔄 Refresh
+            </button>
+        </div>
+        <div style="font-size: 12px; color: #666; margin-bottom: 15px;" id="lastUpdated">
+            Last updated: Loading...
+        </div>
+        <div id="priceGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+            <div style="text-align: center; padding: 20px; color: #999;">Loading prices...</div>
+        </div>
+    </div>
+
+    <!-- Weather Widget -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>🌤️</span> Weather & Crop Insights
+            <button onclick="refreshWeather()" style="margin-left: auto; padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                🔄 Refresh
+            </button>
+        </div>
+        <div id="weatherWidget" style="padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Temperature</div>
+                    <div style="font-size: 24px; font-weight: 700;" id="temp">--°C</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Humidity</div>
+                    <div style="font-size: 24px; font-weight: 700;" id="humidity">--%</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Wind Speed</div>
+                    <div style="font-size: 24px; font-weight: 700;" id="wind">-- km/h</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; opacity: 0.8;">Condition</div>
+                    <div style="font-size: 18px; font-weight: 600;" id="condition">--</div>
+                </div>
+            </div>
+            <div id="recommendations" style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.2); border-radius: 8px; font-size: 14px;">
+                Loading recommendations...
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Analytics -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>📊</span> Market Analytics
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 14px; opacity: 0.9;">Average Price</div>
+                <div style="font-size: 32px; font-weight: 700; margin: 10px 0;" id="avgPrice">₹--</div>
+                <div style="font-size: 12px; opacity: 0.8;">Across all items</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 14px; opacity: 0.9;">Lowest Price</div>
+                <div style="font-size: 24px; font-weight: 700; margin: 10px 0;" id="lowestItem">--</div>
+                <div style="font-size: 20px; font-weight: 600;" id="lowestPrice">₹--</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 14px; opacity: 0.9;">Highest Price</div>
+                <div style="font-size: 24px; font-weight: 700; margin: 10px 0;" id="highestItem">--</div>
+                <div style="font-size: 20px; font-weight: 600;" id="highestPrice">₹--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price Trends -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>📉</span> Price Trends
+        </div>
+        <div style="margin-top: 15px;">
+            <label style="display: block; margin-bottom: 10px; font-weight: 600;">Select Item for Trend:</label>
+            <select id="trendItem" onchange="showTrend()" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                <option value="">-- Choose Item --</option>
+                <option value="tomato">Tomato</option>
+                <option value="onion">Onion</option>
+                <option value="potato">Potato</option>
+                <option value="rice">Rice</option>
+                <option value="wheat">Wheat</option>
+            </select>
+        </div>
+        <div id="trendDisplay" style="margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 12px; display: none;">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;" id="trendTitle">--</div>
+            <div id="trendData" style="font-size: 14px; color: #666;"></div>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="card" style="margin-top: 20px;">
+        <div class="section-title">
+            <span>💬</span> Share Your Feedback
+        </div>
+        <div class="input-group">
+            <label for="feedbackName">👤 Your Name</label>
+            <input id="feedbackName" type="text" placeholder="Enter your name" />
+        </div>
+        <div class="input-group">
+            <label for="feedbackEmail">📧 Email (Optional)</label>
+            <input id="feedbackEmail" type="email" placeholder="your@email.com" />
+        </div>
+        <div class="input-group">
+            <label for="feedbackRating">⭐ Rating</label>
+            <select id="feedbackRating">
+                <option value="">-- Select Rating --</option>
+                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                <option value="4">⭐⭐⭐⭐ Good</option>
+                <option value="3">⭐⭐⭐ Average</option>
+                <option value="2">⭐⭐ Poor</option>
+                <option value="1">⭐ Very Poor</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="feedbackMessage">💭 Your Feedback</label>
+            <textarea id="feedbackMessage" style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 15px; font-size: 16px; min-height: 100px; font-family: inherit; resize: vertical;" placeholder="Share your thoughts..."></textarea>
+        </div>
+        <button class="btn" onclick="submitFeedback()">
+            📤 Submit Feedback
+        </button>
+        <div class="result" id="feedbackResult"></div>
+    </div>
+
+    <div class="helpline">
+        <div class="helpline-title">
+            <span>📞</span> Farmer Helpline Numbers
+        </div>
+        <div class="helpline-grid">
+            <div class="helpline-item">
+                <strong>🌾 Kisan Call Centre</strong>
+                <a href="tel:1800-180-1551">1800-180-1551</a>
+            </div>
+            <div class="helpline-item">
+                <strong>🚜 PM-Kisan Helpline</strong>
+                <a href="tel:155261">155261 / 011-24300606</a>
+            </div>
+            <div class="helpline-item">
+                <strong>📊 Mandi Bhav Helpline</strong>
+                <a href="tel:1800-270-0224">1800-270-0224</a>
+            </div>
+            <div class="helpline-item">
+                <strong>🌐 Agmarknet Portal</strong>
+                <a href="https://agmarknet.gov.in" target="_blank">agmarknet.gov.in</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🇮🇳 Made with ❤️ for Indian Farmers | Jai Jawan Jai Kisan</p>
+        <p style="margin-top: 10px; font-size: 13px; opacity: 0.8;">Created by <strong>Team Molbhav</strong></p>
+    </div>
+</div>
+
+<script>
+// Auto-refresh prices every 30 seconds
+let priceRefreshInterval;
+
+// API Base URL - automatically detects environment
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://127.0.0.1:5001' 
+    : '/api';
+
+function startDeal() {
+    const item = document.getElementById("item").value;
+    const price = document.getElementById("price").value;
+    const resultDiv = document.getElementById("result");
+
+    if(!item || !price) {
+        resultDiv.innerHTML = '<div class="message-box">⚠️ Please fill all the details</div>';
+        resultDiv.classList.add('show');
+        return;
+    }
+
+    fetch(`${API_BASE_URL}/deal`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            item: item,
+            seller_price: price
+        })
+    })
+    .then(r => r.json())
+    .then(d => {
+        if(d.error){
+            resultDiv.innerHTML = `<div class="message-box">❌ ${d.error}</div>`;
+            resultDiv.classList.add('show');
+            return;
+        }
+
+        resultDiv.innerHTML = `
+            <div class="result-item"><strong>🧾 Item:</strong> ${d.item}</div>
+            <div class="result-item"><strong>📊 Mandi Rate:</strong> ₹${d.mandi_price}/kg</div>
+            <div class="result-item"><strong>💰 Seller Price:</strong> ₹${d.seller_price}/kg</div>
+            <div class="result-item">
+                <strong>Status:</strong> 
+                <span class="status-badge status-${d.status}">${d.status}</span>
+            </div>
+            <div class="message-box">💬 ${d.message}</div>
+        `;
+        resultDiv.classList.add('show');
+        
+        // Voice announcement
+        const utterance = new SpeechSynthesisUtterance(d.message);
+        utterance.lang = 'hi-IN';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        
+        const voices = speechSynthesis.getVoices();
+        const hindiVoice = voices.find(v => v.lang.includes('hi'));
+        if(hindiVoice) utterance.voice = hindiVoice;
+        
+        speechSynthesis.speak(utterance);
+    })
+    .catch(err => {
+        resultDiv.innerHTML = '<div class="message-box">❌ Backend connection failed</div>';
+        resultDiv.classList.add('show');
+    });
+}
+
+function refreshPrices() {
+    fetch(`${API_BASE_URL}/prices`)
+        .then(r => r.json())
+        .then(data => {
+            const priceGrid = document.getElementById("priceGrid");
+            const lastUpdated = document.getElementById("lastUpdated");
+            
+            lastUpdated.textContent = `Last updated: ${data.last_updated} | Total items: ${data.total_items}`;
+            
+            let html = '';
+            for(let [item, price] of Object.entries(data.prices)) {
+                html += `
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">${getEmoji(item)}</div>
+                        <div style="font-weight: 600; font-size: 14px; text-transform: capitalize;">${item}</div>
+                        <div style="font-size: 18px; font-weight: 700; margin-top: 5px;">₹${price}/kg</div>
+                    </div>
+                `;
+            }
+            priceGrid.innerHTML = html;
+        })
+        .catch(err => {
+            document.getElementById("priceGrid").innerHTML = '<div style="text-align: center; padding: 20px; color: #ef4444;">Failed to load prices</div>';
+        });
+}
+
+function getEmoji(item) {
+    const emojiMap = {
+        'tomato': '🍅', 'onion': '🧅', 'potato': '🥔', 'bhindi': '🌱',
+        'cabbage': '🥬', 'carrot': '🥕', 'cauliflower': '🥦',
+        'apple': '🍎', 'banana': '🍌', 'mango': '🥭', 'lemon': '🍋',
+        'rice': '🌾', 'wheat': '🌾', 'dal': '🫘',
+        'garlic': '🧄', 'ginger': '🫚',
+        'milk': '🥛', 'paneer': '🧈', 'chicken': '🍗', 'egg': '🥚'
+    };
+    return emojiMap[item] || '🛒';
+}
+
+// Load prices on page load
+window.addEventListener('load', () => {
+    refreshPrices();
+    refreshWeather();
+    refreshAnalytics();
+    // Auto-refresh every 30 seconds
+    priceRefreshInterval = setInterval(refreshPrices, 30000);
+    setInterval(refreshWeather, 60000); // Weather every minute
+    setInterval(refreshAnalytics, 30000); // Analytics every 30 sec
+});
+
+function refreshWeather() {
+    fetch(`${API_BASE_URL}/weather?city=Delhi`)
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('temp').textContent = data.weather.temperature + '°C';
+            document.getElementById('humidity').textContent = data.weather.humidity + '%';
+            document.getElementById('wind').textContent = data.weather.wind_speed + ' km/h';
+            document.getElementById('condition').textContent = data.weather.description;
+            
+            let recsHTML = '<strong>🌾 Crop Recommendations:</strong><br>';
+            data.recommendations.forEach(rec => {
+                recsHTML += '• ' + rec + '<br>';
+            });
+            document.getElementById('recommendations').innerHTML = recsHTML;
+        })
+        .catch(err => console.error('Weather error:', err));
+}
+
+function refreshAnalytics() {
+    fetch(`${API_BASE_URL}/analytics`)
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('avgPrice').textContent = '₹' + data.average_price;
+            document.getElementById('lowestItem').textContent = data.lowest.item;
+            document.getElementById('lowestPrice').textContent = '₹' + data.lowest.price;
+            document.getElementById('highestItem').textContent = data.highest.item;
+            document.getElementById('highestPrice').textContent = '₹' + data.highest.price;
+        })
+        .catch(err => console.error('Analytics error:', err));
+}
+
+function showTrend() {
+    const item = document.getElementById('trendItem').value;
+    if (!item) {
+        document.getElementById('trendDisplay').style.display = 'none';
+        return;
+    }
+    
+    fetch(`${API_BASE_URL}/history/${item}`)
+        .then(r => r.json())
+        .then(data => {
+            const display = document.getElementById('trendDisplay');
+            display.style.display = 'block';
+            document.getElementById('trendTitle').textContent = item.charAt(0).toUpperCase() + item.slice(1) + ' Price History';
+            
+            if (data.history.length === 0) {
+                document.getElementById('trendData').innerHTML = 'No historical data available yet. Check back after a few minutes.';
+            } else {
+                let html = '<div style="max-height: 200px; overflow-y: auto;">';
+                data.history.forEach(h => {
+                    html += `<div style="padding: 8px; margin: 5px 0; background: white; border-radius: 8px; display: flex; justify-content: space-between;">
+                        <span>${h.timestamp}</span>
+                        <span style="font-weight: 700; color: #667eea;">₹${h.price}/kg</span>
+                    </div>`;
+                });
+                html += '</div>';
+                document.getElementById('trendData').innerHTML = html;
+            }
+        })
+        .catch(err => console.error('Trend error:', err));
+}
+
+function submitFeedback() {
+    const name = document.getElementById("feedbackName").value;
+    const email = document.getElementById("feedbackEmail").value;
+    const rating = document.getElementById("feedbackRating").value;
+    const message = document.getElementById("feedbackMessage").value;
+    const resultDiv = document.getElementById("feedbackResult");
+
+    if(!name || !rating || !message) {
+        resultDiv.innerHTML = '<div class="message-box">⚠️ Please fill all required fields</div>';
+        resultDiv.classList.add('show');
+        return;
+    }
+
+    fetch(`${API_BASE_URL}/feedback`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            name: name,
+            email: email,
+            rating: rating,
+            message: message
+        })
+    })
+    .then(r => r.json())
+    .then(d => {
+        resultDiv.innerHTML = '<div class="message-box" style="background: #10b981; color: white;">✅ Thank you for your feedback!</div>';
+        resultDiv.classList.add('show');
+        
+        // Clear form
+        document.getElementById("feedbackName").value = '';
+        document.getElementById("feedbackEmail").value = '';
+        document.getElementById("feedbackRating").value = '';
+        document.getElementById("feedbackMessage").value = '';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            resultDiv.classList.remove('show');
+        }, 3000);
+    })
+    .catch(err => {
+        resultDiv.innerHTML = '<div class="message-box">❌ Failed to submit feedback</div>';
+        resultDiv.classList.add('show');
+    });
+}
+
+// Load voices
+speechSynthesis.getVoices();
+</script>
+
+</body>
+</html>
