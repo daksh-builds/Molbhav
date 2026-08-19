@@ -18,7 +18,7 @@ def fetch_government_api_prices():
     try:
         url = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070"
         params = {"api-key": "579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b", "format": "json", "limit": 50}
-        response = requests.get(url, params=params, timeout=10)
+        response = requests.get(url, params=params, timeout=2)
         if response.status_code == 200:
             data = response.json()
             prices = {}
@@ -46,7 +46,7 @@ def scrape_agmarknet_prices():
         print("Scraping Agmarknet...")
         url = "https://agmarknet.gov.in/"
         headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=2)
         soup = BeautifulSoup(response.content, 'html.parser')
         prices = {}
         tables = soup.find_all('table')
